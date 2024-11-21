@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |gem|
     gem.name        = "fluent-plugin-ddl-redis-store"
-    gem.email       = "info@dominodatalab.com"
-    gem.version     = "0.3.0"
+    gem.email       = "builds@dominodatalab.com"
+    gem.version     = "0.1.0"
     gem.authors     = ["moaikids", "HANAI Tohru aka pokehanai"]
     gem.licenses    = ["Apache License Version 2.0"]
     gem.summary     = %q{Redis(zset/set/list/string/publish) output plugin for Fluentd}
