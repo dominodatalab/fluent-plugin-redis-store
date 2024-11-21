@@ -24,12 +24,12 @@ Release Process
 ---------------
 1. Bump version in gemspec file
 2. `gem build fluent-plugin-ddl-redis-store.gemspec`
-3. `gem push <.gem file>` (with the gem file generated in the previous step)
+3. `gem push <.gem file>` (with the gem file generated in the previous step)  
    Ex: `gem push fluent-plugin-ddl-redis-store-0.3.0.gem`
 
 The `push` command needs to be authenticated with [RubyGems.org](https://rubygems.org/).
 
-Latest published version: https://rubygems.org/gems/fluent-plugin-ddl-redis-store
+Latest release: https://rubygems.org/gems/fluent-plugin-ddl-redis-store
 
 
 Features
