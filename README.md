@@ -16,9 +16,21 @@ Requirements
 Background
 ----------
 
-This is folked project from [fluent-plugin-redisstore][].
+This is a forked project from [fluent-plugin-redis-store][].
 
-[fluent-plugin-redisstore]: https://github.com/moaikids/fluent-plugin-redisstore
+[fluent-plugin-redis-store]: https://github.com/pokehanai/fluent-plugin-redis-store/
+
+Release Process
+---------------
+1. Bump version in gemspec file
+2. `gem build fluent-plugin-ddl-redis-store.gemspec`
+3. `gem push <.gem file>` (with the gem file generated in the previous step)
+   Ex: `gem push fluent-plugin-ddl-redis-store-0.3.0.gem`
+
+The `push` command needs to be authenticated with [RubyGems.org](https://rubygems.org/).
+
+Latest published version: https://rubygems.org/gems/fluent-plugin-ddl-redis-store
+
 
 Features
 --------
