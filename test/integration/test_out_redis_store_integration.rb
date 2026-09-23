@@ -1,4 +1,5 @@
 require 'helpers'
+require 'redis'
 require 'securerandom'
 
 # These tests exercise the plugin against a real Redis server, unlike
