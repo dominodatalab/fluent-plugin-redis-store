@@ -10,7 +10,8 @@ Requirements
 
 | fluent-plugin-redis-store | fluentd | ruby |
 |------------------------|---------|------|
-| >= 0.2.0 | >= v0.14.15 | >= 2.1 |
+| >= 0.3.0 | >= v0.14.15 | >= 3.2 |
+| >= 0.2.0, < 0.3.0 | >= v0.14.15 | >= 2.1 |
 |  < 0.2.0 | >= v0.12.0 | >= 1.9 |
 
 Background
@@ -22,10 +23,13 @@ This is a forked project from [fluent-plugin-redis-store][].
 
 Release Process
 ---------------
-1. Bump version in gemspec file
-2. `gem build fluent-plugin-ddl-redis-store.gemspec`
-3. `gem push <.gem file>` (with the gem file generated in the previous step)  
-   Ex: `gem push fluent-plugin-ddl-redis-store-0.3.0.gem`
+1. Bump `version` in `fluent-plugin-ddl-redis-store.gemspec`
+2. Bump `version` in `domino.yml` to match. It is **not** kept in sync automatically —
+   unlike sibling `domino.yml`s that track an external base image via Renovate, this one
+   tracks the gem's own release number, which nothing here polls or rewrites for you.
+3. `gem build fluent-plugin-ddl-redis-store.gemspec`
+4. `gem push <.gem file>` (with the gem file generated in the previous step)  
+   Ex: `gem push fluent-plugin-ddl-redis-store-0.3.1.gem`
 
 The `push` command needs to be authenticated with [RubyGems.org](https://rubygems.org/).
 
@@ -104,10 +108,10 @@ Installation
 ------------
 
 ```bash
-fluent-gem install fluent-plugin-redis-store
+fluent-gem install fluent-plugin-ddl-redis-store
 
 # or if you are using td-agent:
-td-agent-gem install fluent-plugin-redis-store
+td-agent-gem install fluent-plugin-ddl-redis-store
 ```
 
 Configuration
