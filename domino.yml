@@ -1,0 +1,7 @@
+workflowVersion: 0
+name: fluent-plugin-redis-store
+type: library
+version: 0.3.0
+versionFormat: semver
+language:
+  name: shell
