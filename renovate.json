@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate config",
+  "extends": [
+    "github>cerebrotech/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "Require manual review for major bumps of the redis gem; a two-major-version unattended jump (redis-rb 4.8 -> 6.0) previously broke fluentd at boot (Redis.new ArgumentError) and silently stopped batching in write() -- see the matching rule in the sibling operations-fluentd-docker renovate config",
+      "matchManagers": ["bundler"],
+      "matchPackageNames": ["redis"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  }
+}
