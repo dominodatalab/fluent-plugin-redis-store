@@ -173,6 +173,31 @@ based on *timestamp* and it deletes expired _members_ every after new event data
 No more options than common options.
 
 
+Testing
+-------
+
+Unit tests (`test/plugin/`) stub out the `Redis` class entirely and only exercise
+config parsing and key/value traversal -- they cannot detect a redis-rb client API
+break.
+
+```bash
+bundle exec rake test
+```
+
+Integration tests (`test/integration/`) run against a real Redis server and assert
+on actual `ZCARD`/`LLEN`/`GET`/etc. Start one first:
+
+```bash
+docker run -d --rm -p 6379:6379 redis:7-alpine
+bundle exec rake test:integration
+```
+
+They read `REDIS_HOST`/`REDIS_PORT` from the environment (default `127.0.0.1:6379`)
+and are skipped with a message if no Redis is reachable.
+
+Note: redis-rb 6.x requires Ruby 3.2+; if your local Ruby is older, run both tasks
+inside a container that matches the target fluentd image's Ruby/redis-rb version.
+
 Contributors
 ------------
 
