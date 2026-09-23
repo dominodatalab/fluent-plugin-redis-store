@@ -10,7 +10,8 @@ Requirements
 
 | fluent-plugin-redis-store | fluentd | ruby |
 |------------------------|---------|------|
-| >= 0.2.0 | >= v0.14.15 | >= 2.1 |
+| >= 0.3.0 | >= v0.14.15 | >= 3.2 |
+| >= 0.2.0, < 0.3.0 | >= v0.14.15 | >= 2.1 |
 |  < 0.2.0 | >= v0.12.0 | >= 1.9 |
 
 Background
@@ -22,10 +23,13 @@ This is a forked project from [fluent-plugin-redis-store][].
 
 Release Process
 ---------------
-1. Bump version in gemspec file
-2. `gem build fluent-plugin-ddl-redis-store.gemspec`
-3. `gem push <.gem file>` (with the gem file generated in the previous step)  
-   Ex: `gem push fluent-plugin-ddl-redis-store-0.3.0.gem`
+1. Bump `version` in `fluent-plugin-ddl-redis-store.gemspec`
+2. Bump `version` in `domino.yml` to match. It is **not** kept in sync automatically —
+   unlike sibling `domino.yml`s that track an external base image via Renovate, this one
+   tracks the gem's own release number, which nothing here polls or rewrites for you.
+3. `gem build fluent-plugin-ddl-redis-store.gemspec`
+4. `gem push <.gem file>` (with the gem file generated in the previous step)  
+   Ex: `gem push fluent-plugin-ddl-redis-store-0.3.1.gem`
 
 The `push` command needs to be authenticated with [RubyGems.org](https://rubygems.org/).
 
@@ -104,10 +108,10 @@ Installation
 ------------
 
 ```bash
-fluent-gem install fluent-plugin-redis-store
+fluent-gem install fluent-plugin-ddl-redis-store
 
 # or if you are using td-agent:
-td-agent-gem install fluent-plugin-redis-store
+td-agent-gem install fluent-plugin-ddl-redis-store
 ```
 
 Configuration
@@ -172,6 +176,31 @@ based on *timestamp* and it deletes expired _members_ every after new event data
 
 No more options than common options.
 
+
+Testing
+-------
+
+Unit tests (`test/plugin/`) stub out the `Redis` class entirely and only exercise
+config parsing and key/value traversal -- they cannot detect a redis-rb client API
+break.
+
+```bash
+bundle exec rake test
+```
+
+Integration tests (`test/integration/`) run against a real Redis server and assert
+on actual `ZCARD`/`LLEN`/`GET`/etc. Start one first:
+
+```bash
+docker run -d --rm -p 6379:6379 redis:7-alpine
+bundle exec rake test:integration
+```
+
+They read `REDIS_HOST`/`REDIS_PORT` from the environment (default `127.0.0.1:6379`)
+and are skipped with a message if no Redis is reachable.
+
+Note: redis-rb 6.x requires Ruby 3.2+; if your local Ruby is older, run both tasks
+inside a container that matches the target fluentd image's Ruby/redis-rb version.
 
 Contributors
 ------------

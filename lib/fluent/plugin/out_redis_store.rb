@@ -80,7 +80,7 @@ module Fluent::Plugin
     end
 
     def write(chunk)
-      @redis.pipelined {
+      @redis.pipelined { |pipeline|
         chunk.open { |io|
           begin
             MessagePack::Unpacker.new(io).each { |message|
@@ -88,15 +88,15 @@ module Fluent::Plugin
                 (_, time, record) = message
                 case @store_type
                 when 'zset'
-                  operation_for_zset(record, time)
+                  operation_for_zset(pipeline, record, time)
                 when 'set'
-                  operation_for_set(record)
+                  operation_for_set(pipeline, record)
                 when 'list'
-                  operation_for_list(record)
+                  operation_for_list(pipeline, record)
                 when 'string'
-                  operation_for_string(record)
+                  operation_for_string(pipeline, record)
                 when 'publish'
-                  operation_for_publish(record)
+                  operation_for_publish(pipeline, record)
                 end
               rescue NoMethodError => e
                 puts e
@@ -113,66 +113,66 @@ module Fluent::Plugin
       }
     end
 
-    def operation_for_zset(record, time)
+    def operation_for_zset(pipeline, record, time)
       key = get_key_from(record)
       value = get_value_from(record)
       score = get_score_from(record, time)
       if @collision_policy
         if @collision_policy == 'NX'
-          @redis.zadd(key, score, value, :nx => true)
+          pipeline.zadd(key, score, value, :nx => true)
         elsif @collision_policy == 'XX'
-          @redis.zadd(key, score, value, :xx => true)
+          pipeline.zadd(key, score, value, :xx => true)
         end
       else
-        @redis.zadd(key, score, value)
+        pipeline.zadd(key, score, value)
       end
 
-      set_key_expire key
+      set_key_expire pipeline, key
       if 0 < @value_expire
         now = Time.now.to_i
-        @redis.zremrangebyscore key , '-inf' , (now - @value_expire)
+        pipeline.zremrangebyscore key , '-inf' , (now - @value_expire)
       end
       if 0 < @value_length
         script = generate_zremrangebyrank_script(key, @value_length, @order)
-        @redis.eval script
+        pipeline.eval script
       end
     end
 
-    def operation_for_set(record)
+    def operation_for_set(pipeline, record)
       key = get_key_from(record)
       value = get_value_from(record)
-      @redis.sadd key, value
-      set_key_expire key
+      pipeline.sadd key, value
+      set_key_expire pipeline, key
     end
 
-    def operation_for_list(record)
+    def operation_for_list(pipeline, record)
       key = get_key_from(record)
       value = get_value_from(record)
 
       if @order == 'asc'
-        @redis.rpush key, value
+        pipeline.rpush key, value
       else
-        @redis.lpush key, value
+        pipeline.lpush key, value
       end
-      set_key_expire key
+      set_key_expire pipeline, key
       if 0 < @value_length
         script = generate_ltrim_script(key, @value_length, @order)
-        @redis.eval script
+        pipeline.eval script
       end
     end
 
-    def operation_for_string(record)
+    def operation_for_string(pipeline, record)
       key = get_key_from(record)
       value = get_value_from(record)
-      @redis.set key, value
+      pipeline.set key, value
 
-      set_key_expire key
+      set_key_expire pipeline, key
     end
 
-    def operation_for_publish(record)
+    def operation_for_publish(pipeline, record)
       key = get_key_from(record)
       value = get_value_from(record)
-      @redis.publish key, value
+      pipeline.publish key, value
     end
 
     def generate_zremrangebyrank_script(key, maxlen, order)
@@ -253,9 +253,9 @@ module Fluent::Plugin
       end
     end
 
-    def set_key_expire(key)
+    def set_key_expire(pipeline, key)
       if 0 < @key_expire
-        @redis.expire key, @key_expire
+        pipeline.expire key, @key_expire
       end
     end
 
