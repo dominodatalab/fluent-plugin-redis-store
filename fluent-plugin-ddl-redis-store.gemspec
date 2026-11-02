@@ -2,7 +2,7 @@
 Gem::Specification.new do |gem|
     gem.name        = "fluent-plugin-ddl-redis-store"
     gem.email       = "builds@dominodatalab.com"
-    gem.version     = "0.3.1"
+    gem.version     = "0.3.2"
     gem.authors     = ["moaikids", "HANAI Tohru aka pokehanai"]
     gem.licenses    = ["Apache License Version 2.0"]
     gem.summary     = %q{Redis(zset/set/list/string/publish) output plugin for Fluentd}
@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency "test-unit"
     gem.add_runtime_dependency "fluentd", [">= 0.14.15", "< 2"]
     gem.add_runtime_dependency "redis", [">= 5.0", "< 7"]
+    gem.add_runtime_dependency "yajl-ruby", "~> 1.4"
 end

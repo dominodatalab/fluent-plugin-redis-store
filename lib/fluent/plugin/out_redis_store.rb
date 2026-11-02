@@ -1,4 +1,5 @@
 require 'fluent/plugin/output'
+require 'yajl'
 
 module Fluent::Plugin
   class RedisStoreOutput < Output
