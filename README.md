@@ -1,5 +1,8 @@
 Redis Output Plugin For fluentd
 ===============================
+
+> Superseded by the bundle at [cerebrotech/fluentd](https://github.com/cerebrotech/fluentd), which vendors this plugin in its `plugin/` directory and builds it into the fluentd image. release-6.3 images install the published `0.3.2` gem from RubyGems, so nothing here needs to build. CI and Renovate are disabled.
+
 [Fluentd][] output plugin to upload/publish event data to [Redis][] storage.
 
 [Fluentd]: http://fluentd.org/
